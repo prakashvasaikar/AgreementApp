@@ -1,0 +1,12 @@
+D:\prakash\AgreementApp\AgreementApp_DL\bin\Debug\net5.0\AgreementApp_DL.deps.json
+D:\prakash\AgreementApp\AgreementApp_DL\bin\Debug\net5.0\AgreementApp_DL.dll
+D:\prakash\AgreementApp\AgreementApp_DL\bin\Debug\net5.0\ref\AgreementApp_DL.dll
+D:\prakash\AgreementApp\AgreementApp_DL\bin\Debug\net5.0\AgreementApp_DL.pdb
+D:\prakash\AgreementApp\AgreementApp_DL\obj\Debug\net5.0\AgreementApp_DL.GeneratedMSBuildEditorConfig.editorconfig
+D:\prakash\AgreementApp\AgreementApp_DL\obj\Debug\net5.0\AgreementApp_DL.AssemblyInfoInputs.cache
+D:\prakash\AgreementApp\AgreementApp_DL\obj\Debug\net5.0\AgreementApp_DL.AssemblyInfo.cs
+D:\prakash\AgreementApp\AgreementApp_DL\obj\Debug\net5.0\AgreementApp_DL.csproj.CoreCompileInputs.cache
+D:\prakash\AgreementApp\AgreementApp_DL\obj\Debug\net5.0\AgreementApp_DL.dll
+D:\prakash\AgreementApp\AgreementApp_DL\obj\Debug\net5.0\ref\AgreementApp_DL.dll
+D:\prakash\AgreementApp\AgreementApp_DL\obj\Debug\net5.0\AgreementApp_DL.pdb
+D:\prakash\AgreementApp\AgreementApp_DL\obj\Debug\net5.0\AgreementApp_DL.csproj.AssemblyReference.cache

@@ -1,0 +1,173 @@
+﻿
+@model AgreementApp_DL.AgreementDetailModel
+
+@{
+    int intProductGroupId = 0;
+    if (Model.refID_ProductGroupMaster > 0)
+    {
+        intProductGroupId = Model.refID_ProductGroupMaster;
+    }
+}
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog" style="width:50%;max-width:100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4><strong class="text">Add New Agreement</strong> <button type="button" class="close" data-dismiss="modal">&times;</button></h4>
+            </div>
+            <div class="modal-body">
+                <form id="frmAgreement">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row form-group">
+                                <label asp-for="refID_ProductGroupMaster" class="col-sm-3">Product Group <span style="color:red">*</span></label>
+                                <div class="col-sm-9">
+                                    <select asp-for="refID_ProductGroupMaster" class="form-control" asp-items="@(new SelectList(ViewBag.vbProductGroup,"Value","Text"))">
+                                        <option value="0">Select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label asp-for="refID_ProductMaster" class="col-sm-3">Product <span style="color:red">*</span></label>
+                                <div class="col-sm-9">
+                                    <select asp-for="refID_ProductMaster" class="form-control">
+                                        <option value="0">Select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label asp-for="EffectiveDate" class="col-sm-3">EffectiveDate <span style="color:red">*</span></label>
+                                <div class="col-sm-9">
+                                    <input asp-for="EffectiveDate" type="date" class="form-control datepicker" autocomplete="off" />
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <label asp-for="ExpirationDate" class="col-sm-3">ExpirationDate <span style="color:red">*</span></label>
+                                <div class="col-sm-9">
+                                    <input asp-for="ExpirationDate" type="date" class="form-control" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label asp-for="ProductPrice" class="col-sm-3">ProductPrice <span style="color:red">*</span></label>
+                                <div class="col-sm-9">
+                                    <input asp-for="ProductPrice" onkeypress="return funIsNumber(event)" class="form-control" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label asp-for="NewPrice" class="col-sm-3">NewPrice <span style="color:red">*</span></label>
+                                <div class="col-sm-9">
+                                    <input asp-for="NewPrice" onkeypress="return funIsNumber(event)" class="form-control" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="row form-group text-center">
+                                <label class="col-sm-3"></label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" asp-for="Active"><label class="col-sm-3 pull-right">Active<span style="color:red">*</span></label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnSubmit" class="btn btn-success" onclick="funSaveAgreement();"><i class="fa fa-floppy-o"></i> Save</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    funGetProductListByProductGroup = (_Id) => {
+        var items = '';
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetProductListByProductGroup", "Agreement")",
+            data: { paramProductGroupId: _Id },
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (k, option) {
+                    items += "<option value = '" + option.Id + "'>" + option.ProductNumber +" - "+ option.ProductDescription + " </option>";
+                });
+
+                $('#refID_ProductMaster').html(items);
+                var _SelectedVal = "@Model.refID_ProductMaster";
+                if (_SelectedVal != undefined && _SelectedVal != "" && _SelectedVal != null)
+                {
+                    $('#refID_ProductMaster option[value="@Model.refID_ProductMaster"]').attr("selected", "selected");
+                    $("#refID_ProductMaster").trigger("change");
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        if (@intProductGroupId> 0) {
+            funGetProductListByProductGroup(@intProductGroupId);
+        }
+        $('#refID_ProductGroupMaster').change(function () {
+            var _Id = $('#refID_ProductGroupMaster').val();
+            funGetProductListByProductGroup(_Id);
+        });
+
+        $('#refID_ProductMaster').change(function () {
+            var _Id = $('#refID_ProductMaster').val();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetProductPriceByProduct", "Agreement")",
+                data: { paramProductId: _Id },
+                dataType: "json",
+                success: function (data) {
+                    if (data.productPrice != null) {
+                        $("#ProductPrice").val(data.productPrice);
+                    }
+                }
+            });
+        });
+    });
+
+    funIsNumber = (evt) => {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    funSaveAgreement = () => {
+        var _refID_ProductGroupMaster = $("#refID_ProductGroupMaster").val();
+        var _refID_ProductMaster = $("#refID_ProductMaster").val();
+        var _EffectiveDate = $("#EffectiveDate").val();
+        var _ExpirationDate = $("#ExpirationDate").val();
+        var _ProductPrice = $("#ProductPrice").val();
+        var _NewPrice = $("#NewPrice").val();
+        var _Active = $("#Active").prop('checked');
+
+        if (_Active == false || _refID_ProductGroupMaster == "0" || _refID_ProductMaster == "0" || _EffectiveDate == "" || _ExpirationDate == "" || _ProductPrice == "" || _NewPrice == "") {
+            toastr.warning('All mandatory fields is requeried!')
+            return false;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SaveAgreement", "Agreement")',
+            data: $("#frmAgreement").serialize(),
+            type: "POST",
+            success: function (res) {
+                if (res.Result == "OK") {
+                    toastr.success("Record save successfully");
+                    setTimeout(function () {
+                        location.href = '@Url.Action("Index", "Agreement")';
+                    }, 2000);
+                }
+            },
+            error: function (xhr) {
+                toastr.error(xhr);
+            }
+        });
+
+    }
+</script>
