@@ -52,7 +52,7 @@ namespace AgreementApp_BL.Repository
         public List<SelectListItem> getProductGroup()
         {
             List<SelectListItem> item = new List<SelectListItem>();
-            item = _dbContext.tblProductGroupMaster.Select(x => new SelectListItem()
+            item = _dbContext.tblProductGroupMaster.Where(x => x.Active == true).Select(x => new SelectListItem()
             {
                 Value = x.Id.ToString(),
                 Text = x.GroupCode + " - " + x.GroupDescription,
@@ -61,7 +61,7 @@ namespace AgreementApp_BL.Repository
         }
         public async Task<IEnumerable<ProductMasterModel>> getProductListByProductGroup(int paramProductGroupId)
         {
-            return await _dbContext.tblProductMaster.Where(s => s.refID_ProductGroupMaster == paramProductGroupId).ToListAsync();
+            return await _dbContext.tblProductMaster.Where(s => s.refID_ProductGroupMaster == paramProductGroupId && s.Active == true).ToListAsync();
         }
         public async Task<ProductMasterModel> getProductPriceByProduct(int paramProductId)
         {
